@@ -1,0 +1,39 @@
+﻿@page "/tours"
+@inject HttpClient client
+
+@if (cities == null)
+{
+    <text>Loading...</text>
+}
+else if (cities.Length == 0)
+{
+    <text>No Records Found.</text>
+}
+else
+{
+    <div class="card-columns">
+        @foreach (var city in cities)
+        {
+            <div>
+                <div class="card-img" style="background-image: url('@city.Image');"></div>
+                <div class="card-footer">
+                    <div>
+                        <span class="oi oi-location" aria-hidden="true"></span>
+                        <span>@city.Name</span>
+                    </div>
+                    <div>
+                        <p>@city.EventDate.ToString()</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    City[] cities { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        cities = await client.GetFromJsonAsync<City[]>("api/cities");
+    }
+}
